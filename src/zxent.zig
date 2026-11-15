@@ -33,6 +33,12 @@ pub const FlexWrap = enum(c_int) {
     wrap = c.XENT_FLEX_WRAP,
 };
 
+pub const AppBarMode = enum(c_int) {
+    compact = c.XTK_APPBAR_COMPACT,
+    minimal = c.XTK_APPBAR_MINIMAL,
+    hidden = c.XTK_APPBAR_HIDDEN,
+};
+
 pub const BadgeMode = enum(c_int) {
     dot = c.XTK_BADGE_DOT,
     number = c.XTK_BADGE_NUMBER,
@@ -56,6 +62,11 @@ pub const Clock = enum(c_int) {
     system = c.XTK_CLOCK_SYSTEM,
     h12 = c.XTK_CLOCK_12H,
     h24 = c.XTK_CLOCK_24H,
+};
+
+pub const ElementLabel = enum(c_int) {
+    default = c.XTK_ELEMENT_LABEL_DEFAULT,
+    collapsed = c.XTK_ELEMENT_LABEL_COLLAPSED,
 };
 
 pub const FontWeight = enum(c_int) {
@@ -84,11 +95,23 @@ pub const InfoBarSeverity = enum(c_int) {
     @"error" = c.XTK_INFOBAR_ERROR,
 };
 
+pub const LabelPosition = enum(c_int) {
+    bottom = c.XTK_LABEL_BOTTOM,
+    right = c.XTK_LABEL_RIGHT,
+    collapsed = c.XTK_LABEL_COLLAPSED,
+};
+
 pub const ListSelMode = enum(c_int) {
     single = c.XTK_LIST_SELECT_SINGLE,
     none = c.XTK_LIST_SELECT_NONE,
     multiple = c.XTK_LIST_SELECT_MULTIPLE,
     extended = c.XTK_LIST_SELECT_EXTENDED,
+};
+
+pub const OverflowButton = enum(c_int) {
+    auto = c.XTK_OVERFLOW_BUTTON_AUTO,
+    visible = c.XTK_OVERFLOW_BUTTON_VISIBLE,
+    collapsed = c.XTK_OVERFLOW_BUTTON_COLLAPSED,
 };
 
 pub const PagerButtonVis = enum(c_int) {
@@ -132,6 +155,12 @@ pub const ScrollBarIndicator = enum(c_int) {
 pub const SliderSnap = enum(c_int) {
     step = c.XTK_SLIDER_SNAP_STEP,
     ticks = c.XTK_SLIDER_SNAP_TICKS,
+};
+
+pub const SortDirection = enum(c_int) {
+    none = c.XTK_SORT_NONE,
+    ascending = c.XTK_SORT_ASCENDING,
+    descending = c.XTK_SORT_DESCENDING,
 };
 
 pub const Spectrum = enum(c_int) {
@@ -232,7 +261,7 @@ pub fn Container(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -256,15 +285,15 @@ pub fn Container(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn items(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn justify(b: Self, v: FlexJustify) Self {
-            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn gap(b: Self, v: f32) Self {
@@ -300,14 +329,14 @@ pub fn Container(comptime A: type) type {
             return b;
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
-            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
     };
 }
 
 pub fn container(ui: anytype) Container(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_CONTAINER) };
+    return .{ .el = ui.el(c.XTK_CTRL_CONTAINER, &c.flux_ctrl_container) };
 }
 
 pub fn Text(comptime A: type) type {
@@ -335,7 +364,7 @@ pub fn Text(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -367,11 +396,11 @@ pub fn Text(comptime A: type) type {
             return b;
         }
         pub fn fontweight(b: Self, v: FontWeight) Self {
-            b.el.prop(c.XTK_PROP_FONT_WEIGHT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_FONT_WEIGHT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn textalign(b: Self, v: TextAlign) Self {
-            b.el.prop(c.XTK_PROP_TEXT_ALIGN, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_TEXT_ALIGN, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn fg(b: Self, v: u32) Self {
@@ -383,7 +412,7 @@ pub fn Text(comptime A: type) type {
             return b;
         }
         pub fn trim(b: Self, v: TextTrim) Self {
-            b.el.prop(c.XTK_PROP_TEXT_TRIM, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_TEXT_TRIM, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn textwrap(b: Self, v: bool) Self {
@@ -398,7 +427,7 @@ pub fn Text(comptime A: type) type {
 }
 
 pub fn text(ui: anytype) Text(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TEXT) };
+    return .{ .el = ui.el(c.XTK_CTRL_TEXT, &c.flux_ctrl_text) };
 }
 
 pub fn Button(comptime A: type) type {
@@ -426,7 +455,7 @@ pub fn Button(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -462,7 +491,7 @@ pub fn Button(comptime A: type) type {
             return b;
         }
         pub fn style(b: Self, v: ButtonStyle) Self {
-            b.el.prop(c.XTK_PROP_BUTTON_STYLE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_BUTTON_STYLE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onInvoke(b: Self, msg: A.Msg) Self {
@@ -473,7 +502,7 @@ pub fn Button(comptime A: type) type {
 }
 
 pub fn button(ui: anytype) Button(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_BUTTON) };
+    return .{ .el = ui.el(c.XTK_CTRL_BUTTON, &c.flux_ctrl_button) };
 }
 
 pub fn Toggle(comptime A: type) type {
@@ -501,7 +530,7 @@ pub fn Toggle(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -544,7 +573,7 @@ pub fn Toggle(comptime A: type) type {
 }
 
 pub fn toggle(ui: anytype) Toggle(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TOGGLE) };
+    return .{ .el = ui.el(c.XTK_CTRL_TOGGLE, &c.flux_ctrl_toggle) };
 }
 
 pub fn Checkbox(comptime A: type) type {
@@ -572,7 +601,7 @@ pub fn Checkbox(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -627,7 +656,7 @@ pub fn Checkbox(comptime A: type) type {
 }
 
 pub fn checkbox(ui: anytype) Checkbox(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_CHECKBOX) };
+    return .{ .el = ui.el(c.XTK_CTRL_CHECKBOX, &c.flux_ctrl_checkbox) };
 }
 
 pub fn Radio(comptime A: type) type {
@@ -655,7 +684,7 @@ pub fn Radio(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -698,7 +727,7 @@ pub fn Radio(comptime A: type) type {
 }
 
 pub fn radio(ui: anytype) Radio(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_RADIO) };
+    return .{ .el = ui.el(c.XTK_CTRL_RADIO, &c.flux_ctrl_radio) };
 }
 
 pub fn Switch(comptime A: type) type {
@@ -726,7 +755,7 @@ pub fn Switch(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -769,7 +798,7 @@ pub fn Switch(comptime A: type) type {
 }
 
 pub fn @"switch"(ui: anytype) Switch(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SWITCH) };
+    return .{ .el = ui.el(c.XTK_CTRL_SWITCH, &c.flux_ctrl_switch) };
 }
 
 pub fn Slider(comptime A: type) type {
@@ -797,7 +826,7 @@ pub fn Slider(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -845,11 +874,11 @@ pub fn Slider(comptime A: type) type {
             return b;
         }
         pub fn tickplace(b: Self, v: TickPlacement) Self {
-            b.el.prop(c.XTK_PROP_TICK_PLACEMENT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_TICK_PLACEMENT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn snapsto(b: Self, v: SliderSnap) Self {
-            b.el.prop(c.XTK_PROP_SLIDER_SNAPS_TO, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_SLIDER_SNAPS_TO, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn smallchange(b: Self, v: f32) Self {
@@ -861,7 +890,7 @@ pub fn Slider(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn range(b: Self, v: bool) Self {
@@ -888,7 +917,7 @@ pub fn Slider(comptime A: type) type {
 }
 
 pub fn slider(ui: anytype) Slider(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SLIDER) };
+    return .{ .el = ui.el(c.XTK_CTRL_SLIDER, &c.flux_ctrl_slider) };
 }
 
 pub fn Textbox(comptime A: type) type {
@@ -916,7 +945,7 @@ pub fn Textbox(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -967,7 +996,7 @@ pub fn Textbox(comptime A: type) type {
 }
 
 pub fn textbox(ui: anytype) Textbox(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TEXTBOX) };
+    return .{ .el = ui.el(c.XTK_CTRL_TEXTBOX, &c.flux_ctrl_textbox) };
 }
 
 pub fn Scroll(comptime A: type) type {
@@ -999,7 +1028,7 @@ pub fn Scroll(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1023,15 +1052,15 @@ pub fn Scroll(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn items(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn justify(b: Self, v: FlexJustify) Self {
-            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn gap(b: Self, v: f32) Self {
@@ -1067,7 +1096,7 @@ pub fn Scroll(comptime A: type) type {
             return b;
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
-            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn x(b: Self, v: f32) Self {
@@ -1086,7 +1115,7 @@ pub fn Scroll(comptime A: type) type {
 }
 
 pub fn scroll(ui: anytype) Scroll(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SCROLL) };
+    return .{ .el = ui.el(c.XTK_CTRL_SCROLL, &c.flux_ctrl_scroll) };
 }
 
 pub fn Image(comptime A: type) type {
@@ -1114,7 +1143,7 @@ pub fn Image(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1142,14 +1171,14 @@ pub fn Image(comptime A: type) type {
             return b;
         }
         pub fn fit(b: Self, v: ImageStretch) Self {
-            b.el.prop(c.XTK_PROP_IMAGE_STRETCH, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_IMAGE_STRETCH, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
     };
 }
 
 pub fn image(ui: anytype) Image(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_IMAGE) };
+    return .{ .el = ui.el(c.XTK_CTRL_IMAGE, &c.flux_ctrl_image) };
 }
 
 pub fn Progress(comptime A: type) type {
@@ -1177,7 +1206,7 @@ pub fn Progress(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1217,7 +1246,7 @@ pub fn Progress(comptime A: type) type {
             return b;
         }
         pub fn state(b: Self, v: ProgressState) Self {
-            b.el.prop(c.XTK_PROP_PROGRESS_STATE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_PROGRESS_STATE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn pl(b: Self, v: f32) Self {
@@ -1244,7 +1273,7 @@ pub fn Progress(comptime A: type) type {
 }
 
 pub fn progress(ui: anytype) Progress(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_PROGRESS) };
+    return .{ .el = ui.el(c.XTK_CTRL_PROGRESS, &c.flux_ctrl_progress) };
 }
 
 pub fn List(comptime A: type) type {
@@ -1272,7 +1301,7 @@ pub fn List(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1320,7 +1349,7 @@ pub fn List(comptime A: type) type {
             return b;
         }
         pub fn mode(b: Self, v: ListSelMode) Self {
-            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn first(b: Self, v: i32) Self {
@@ -1343,7 +1372,7 @@ pub fn List(comptime A: type) type {
 }
 
 pub fn list(ui: anytype) List(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_LIST) };
+    return .{ .el = ui.el(c.XTK_CTRL_LIST, &c.flux_ctrl_list) };
 }
 
 pub fn Tab(comptime A: type) type {
@@ -1375,7 +1404,7 @@ pub fn Tab(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1402,7 +1431,7 @@ pub fn Tab(comptime A: type) type {
 }
 
 pub fn tab(ui: anytype) Tab(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TAB) };
+    return .{ .el = ui.el(c.XTK_CTRL_TAB, &c.flux_ctrl_tab) };
 }
 
 pub fn Card(comptime A: type) type {
@@ -1434,7 +1463,7 @@ pub fn Card(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1458,15 +1487,15 @@ pub fn Card(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn items(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn justify(b: Self, v: FlexJustify) Self {
-            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn gap(b: Self, v: f32) Self {
@@ -1502,14 +1531,14 @@ pub fn Card(comptime A: type) type {
             return b;
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
-            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
     };
 }
 
 pub fn card(ui: anytype) Card(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_CARD) };
+    return .{ .el = ui.el(c.XTK_CTRL_CARD, &c.flux_ctrl_card) };
 }
 
 pub fn Divider(comptime A: type) type {
@@ -1541,7 +1570,7 @@ pub fn Divider(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1568,7 +1597,7 @@ pub fn Divider(comptime A: type) type {
 }
 
 pub fn divider(ui: anytype) Divider(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_DIVIDER) };
+    return .{ .el = ui.el(c.XTK_CTRL_DIVIDER, &c.flux_ctrl_divider) };
 }
 
 pub fn Canvas(comptime A: type) type {
@@ -1600,7 +1629,7 @@ pub fn Canvas(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1627,7 +1656,7 @@ pub fn Canvas(comptime A: type) type {
 }
 
 pub fn canvas(ui: anytype) Canvas(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_CANVAS) };
+    return .{ .el = ui.el(c.XTK_CTRL_CANVAS, &c.flux_ctrl_canvas) };
 }
 
 pub fn Password(comptime A: type) type {
@@ -1655,7 +1684,7 @@ pub fn Password(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1698,7 +1727,7 @@ pub fn Password(comptime A: type) type {
 }
 
 pub fn password(ui: anytype) Password(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_PASSWORD) };
+    return .{ .el = ui.el(c.XTK_CTRL_PASSWORD, &c.flux_ctrl_password) };
 }
 
 pub fn Number(comptime A: type) type {
@@ -1726,7 +1755,7 @@ pub fn Number(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1781,7 +1810,7 @@ pub fn Number(comptime A: type) type {
 }
 
 pub fn number(ui: anytype) Number(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_NUMBER) };
+    return .{ .el = ui.el(c.XTK_CTRL_NUMBER, &c.flux_ctrl_number) };
 }
 
 pub fn Link(comptime A: type) type {
@@ -1809,7 +1838,7 @@ pub fn Link(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1852,7 +1881,7 @@ pub fn Link(comptime A: type) type {
 }
 
 pub fn link(ui: anytype) Link(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_LINK) };
+    return .{ .el = ui.el(c.XTK_CTRL_LINK, &c.flux_ctrl_link) };
 }
 
 pub fn Repeat(comptime A: type) type {
@@ -1880,7 +1909,7 @@ pub fn Repeat(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1916,7 +1945,7 @@ pub fn Repeat(comptime A: type) type {
             return b;
         }
         pub fn style(b: Self, v: ButtonStyle) Self {
-            b.el.prop(c.XTK_PROP_BUTTON_STYLE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_BUTTON_STYLE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onInvoke(b: Self, msg: A.Msg) Self {
@@ -1927,7 +1956,7 @@ pub fn Repeat(comptime A: type) type {
 }
 
 pub fn repeat(ui: anytype) Repeat(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_REPEAT) };
+    return .{ .el = ui.el(c.XTK_CTRL_REPEAT, &c.flux_ctrl_repeat) };
 }
 
 pub fn Progressring(comptime A: type) type {
@@ -1955,7 +1984,7 @@ pub fn Progressring(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -1995,7 +2024,7 @@ pub fn Progressring(comptime A: type) type {
             return b;
         }
         pub fn state(b: Self, v: ProgressState) Self {
-            b.el.prop(c.XTK_PROP_PROGRESS_STATE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_PROGRESS_STATE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn active(b: Self, v: bool) Self {
@@ -2006,7 +2035,7 @@ pub fn Progressring(comptime A: type) type {
 }
 
 pub fn progressring(ui: anytype) Progressring(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_PROGRESSRING) };
+    return .{ .el = ui.el(c.XTK_CTRL_PROGRESSRING, &c.flux_ctrl_progressring) };
 }
 
 pub fn Badge(comptime A: type) type {
@@ -2038,7 +2067,7 @@ pub fn Badge(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2062,7 +2091,7 @@ pub fn Badge(comptime A: type) type {
             return b;
         }
         pub fn badgemode(b: Self, v: BadgeMode) Self {
-            b.el.prop(c.XTK_PROP_BADGE_MODE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_BADGE_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn value(b: Self, v: i32) Self {
@@ -2077,7 +2106,7 @@ pub fn Badge(comptime A: type) type {
 }
 
 pub fn badge(ui: anytype) Badge(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_BADGE) };
+    return .{ .el = ui.el(c.XTK_CTRL_BADGE, &c.flux_ctrl_badge) };
 }
 
 pub fn Tooltip(comptime A: type) type {
@@ -2105,7 +2134,7 @@ pub fn Tooltip(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2144,7 +2173,7 @@ pub fn Tooltip(comptime A: type) type {
 }
 
 pub fn tooltip(ui: anytype) Tooltip(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TOOLTIP) };
+    return .{ .el = ui.el(c.XTK_CTRL_TOOLTIP, &c.flux_ctrl_tooltip) };
 }
 
 pub fn Flyout(comptime A: type) type {
@@ -2172,7 +2201,7 @@ pub fn Flyout(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2211,7 +2240,7 @@ pub fn Flyout(comptime A: type) type {
 }
 
 pub fn flyout(ui: anytype) Flyout(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_FLYOUT) };
+    return .{ .el = ui.el(c.XTK_CTRL_FLYOUT, &c.flux_ctrl_flyout) };
 }
 
 pub fn Menufly(comptime A: type) type {
@@ -2239,7 +2268,7 @@ pub fn Menufly(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2278,7 +2307,7 @@ pub fn Menufly(comptime A: type) type {
 }
 
 pub fn menufly(ui: anytype) Menufly(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_MENUFLY) };
+    return .{ .el = ui.el(c.XTK_CTRL_MENUFLY, &c.flux_ctrl_menufly) };
 }
 
 pub fn Dropdown(comptime A: type) type {
@@ -2306,7 +2335,7 @@ pub fn Dropdown(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2342,7 +2371,7 @@ pub fn Dropdown(comptime A: type) type {
             return b;
         }
         pub fn style(b: Self, v: ButtonStyle) Self {
-            b.el.prop(c.XTK_PROP_BUTTON_STYLE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_BUTTON_STYLE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onInvoke(b: Self, msg: A.Msg) Self {
@@ -2353,7 +2382,7 @@ pub fn Dropdown(comptime A: type) type {
 }
 
 pub fn dropdown(ui: anytype) Dropdown(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_DROPDOWN) };
+    return .{ .el = ui.el(c.XTK_CTRL_DROPDOWN, &c.flux_ctrl_dropdown) };
 }
 
 pub fn Split(comptime A: type) type {
@@ -2381,7 +2410,7 @@ pub fn Split(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2417,7 +2446,7 @@ pub fn Split(comptime A: type) type {
             return b;
         }
         pub fn style(b: Self, v: ButtonStyle) Self {
-            b.el.prop(c.XTK_PROP_BUTTON_STYLE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_BUTTON_STYLE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onInvoke(b: Self, msg: A.Msg) Self {
@@ -2428,7 +2457,7 @@ pub fn Split(comptime A: type) type {
 }
 
 pub fn split(ui: anytype) Split(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SPLIT) };
+    return .{ .el = ui.el(c.XTK_CTRL_SPLIT, &c.flux_ctrl_split) };
 }
 
 pub fn Combo(comptime A: type) type {
@@ -2456,7 +2485,7 @@ pub fn Combo(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2515,7 +2544,7 @@ pub fn Combo(comptime A: type) type {
 }
 
 pub fn combo(ui: anytype) Combo(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_COMBO) };
+    return .{ .el = ui.el(c.XTK_CTRL_COMBO, &c.flux_ctrl_combo) };
 }
 
 pub fn Expander(comptime A: type) type {
@@ -2543,7 +2572,7 @@ pub fn Expander(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2586,7 +2615,7 @@ pub fn Expander(comptime A: type) type {
 }
 
 pub fn expander(ui: anytype) Expander(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_EXPANDER) };
+    return .{ .el = ui.el(c.XTK_CTRL_EXPANDER, &c.flux_ctrl_expander) };
 }
 
 pub fn Exphead(comptime A: type) type {
@@ -2614,7 +2643,7 @@ pub fn Exphead(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2661,7 +2690,7 @@ pub fn Exphead(comptime A: type) type {
 }
 
 pub fn exphead(ui: anytype) Exphead(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_EXPHEAD) };
+    return .{ .el = ui.el(c.XTK_CTRL_EXPHEAD, &c.flux_ctrl_exphead) };
 }
 
 pub fn Expbody(comptime A: type) type {
@@ -2693,7 +2722,7 @@ pub fn Expbody(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2717,15 +2746,15 @@ pub fn Expbody(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn items(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn justify(b: Self, v: FlexJustify) Self {
-            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn gap(b: Self, v: f32) Self {
@@ -2761,14 +2790,14 @@ pub fn Expbody(comptime A: type) type {
             return b;
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
-            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
     };
 }
 
 pub fn expbody(ui: anytype) Expbody(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_EXPBODY) };
+    return .{ .el = ui.el(c.XTK_CTRL_EXPBODY, &c.flux_ctrl_expbody) };
 }
 
 pub fn Infobar(comptime A: type) type {
@@ -2796,7 +2825,7 @@ pub fn Infobar(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2828,7 +2857,7 @@ pub fn Infobar(comptime A: type) type {
             return b;
         }
         pub fn severity(b: Self, v: InfoBarSeverity) Self {
-            b.el.prop(c.XTK_PROP_SEVERITY, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_SEVERITY, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn closable(b: Self, v: bool) Self {
@@ -2843,7 +2872,7 @@ pub fn Infobar(comptime A: type) type {
 }
 
 pub fn infobar(ui: anytype) Infobar(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_INFOBAR) };
+    return .{ .el = ui.el(c.XTK_CTRL_INFOBAR, &c.flux_ctrl_infobar) };
 }
 
 pub fn Dialog(comptime A: type) type {
@@ -2875,7 +2904,7 @@ pub fn Dialog(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2934,7 +2963,7 @@ pub fn Dialog(comptime A: type) type {
 }
 
 pub fn dialog(ui: anytype) Dialog(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_DIALOG) };
+    return .{ .el = ui.el(c.XTK_CTRL_DIALOG, &c.flux_ctrl_dialog) };
 }
 
 pub fn Dialogbody(comptime A: type) type {
@@ -2966,7 +2995,7 @@ pub fn Dialogbody(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -2990,15 +3019,15 @@ pub fn Dialogbody(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn items(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn justify(b: Self, v: FlexJustify) Self {
-            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn gap(b: Self, v: f32) Self {
@@ -3034,14 +3063,14 @@ pub fn Dialogbody(comptime A: type) type {
             return b;
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
-            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
     };
 }
 
 pub fn dialogbody(ui: anytype) Dialogbody(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_DIALOGBODY) };
+    return .{ .el = ui.el(c.XTK_CTRL_DIALOGBODY, &c.flux_ctrl_dialogbody) };
 }
 
 pub fn Menubar(comptime A: type) type {
@@ -3073,7 +3102,7 @@ pub fn Menubar(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3100,7 +3129,7 @@ pub fn Menubar(comptime A: type) type {
 }
 
 pub fn menubar(ui: anytype) Menubar(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_MENUBAR) };
+    return .{ .el = ui.el(c.XTK_CTRL_MENUBAR, &c.flux_ctrl_menubar) };
 }
 
 pub fn Menuitem(comptime A: type) type {
@@ -3128,7 +3157,7 @@ pub fn Menuitem(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3179,7 +3208,7 @@ pub fn Menuitem(comptime A: type) type {
 }
 
 pub fn menuitem(ui: anytype) Menuitem(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_MENUITEM) };
+    return .{ .el = ui.el(c.XTK_CTRL_MENUITEM, &c.flux_ctrl_menuitem) };
 }
 
 pub fn Nav(comptime A: type) type {
@@ -3207,7 +3236,7 @@ pub fn Nav(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3250,7 +3279,7 @@ pub fn Nav(comptime A: type) type {
 }
 
 pub fn nav(ui: anytype) Nav(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_NAV) };
+    return .{ .el = ui.el(c.XTK_CTRL_NAV, &c.flux_ctrl_nav) };
 }
 
 pub fn Navitem(comptime A: type) type {
@@ -3278,7 +3307,7 @@ pub fn Navitem(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3329,7 +3358,7 @@ pub fn Navitem(comptime A: type) type {
 }
 
 pub fn navitem(ui: anytype) Navitem(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_NAVITEM) };
+    return .{ .el = ui.el(c.XTK_CTRL_NAVITEM, &c.flux_ctrl_navitem) };
 }
 
 pub fn Tabs(comptime A: type) type {
@@ -3357,7 +3386,7 @@ pub fn Tabs(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3408,7 +3437,7 @@ pub fn Tabs(comptime A: type) type {
 }
 
 pub fn tabs(ui: anytype) Tabs(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TABS) };
+    return .{ .el = ui.el(c.XTK_CTRL_TABS, &c.flux_ctrl_tabs) };
 }
 
 pub fn Tabitem(comptime A: type) type {
@@ -3436,7 +3465,7 @@ pub fn Tabitem(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3487,7 +3516,7 @@ pub fn Tabitem(comptime A: type) type {
 }
 
 pub fn tabitem(ui: anytype) Tabitem(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TABITEM) };
+    return .{ .el = ui.el(c.XTK_CTRL_TABITEM, &c.flux_ctrl_tabitem) };
 }
 
 pub fn Listitem(comptime A: type) type {
@@ -3515,7 +3544,7 @@ pub fn Listitem(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3566,7 +3595,7 @@ pub fn Listitem(comptime A: type) type {
 }
 
 pub fn listitem(ui: anytype) Listitem(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_LISTITEM) };
+    return .{ .el = ui.el(c.XTK_CTRL_LISTITEM, &c.flux_ctrl_listitem) };
 }
 
 pub fn Listbox(comptime A: type) type {
@@ -3594,7 +3623,7 @@ pub fn Listbox(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3642,7 +3671,7 @@ pub fn Listbox(comptime A: type) type {
             return b;
         }
         pub fn mode(b: Self, v: ListSelMode) Self {
-            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn first(b: Self, v: i32) Self {
@@ -3665,7 +3694,7 @@ pub fn Listbox(comptime A: type) type {
 }
 
 pub fn listbox(ui: anytype) Listbox(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_LISTBOX) };
+    return .{ .el = ui.el(c.XTK_CTRL_LISTBOX, &c.flux_ctrl_listbox) };
 }
 
 pub fn Gridview(comptime A: type) type {
@@ -3693,7 +3722,7 @@ pub fn Gridview(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3741,7 +3770,7 @@ pub fn Gridview(comptime A: type) type {
             return b;
         }
         pub fn mode(b: Self, v: ListSelMode) Self {
-            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn first(b: Self, v: i32) Self {
@@ -3764,7 +3793,7 @@ pub fn Gridview(comptime A: type) type {
 }
 
 pub fn gridview(ui: anytype) Gridview(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_GRIDVIEW) };
+    return .{ .el = ui.el(c.XTK_CTRL_GRIDVIEW, &c.flux_ctrl_gridview) };
 }
 
 pub fn Repeater(comptime A: type) type {
@@ -3792,7 +3821,7 @@ pub fn Repeater(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3840,7 +3869,7 @@ pub fn Repeater(comptime A: type) type {
             return b;
         }
         pub fn mode(b: Self, v: ListSelMode) Self {
-            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn first(b: Self, v: i32) Self {
@@ -3855,7 +3884,7 @@ pub fn Repeater(comptime A: type) type {
 }
 
 pub fn repeater(ui: anytype) Repeater(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_REPEATER) };
+    return .{ .el = ui.el(c.XTK_CTRL_REPEATER, &c.flux_ctrl_repeater) };
 }
 
 pub fn Itemsview(comptime A: type) type {
@@ -3883,7 +3912,7 @@ pub fn Itemsview(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -3931,7 +3960,7 @@ pub fn Itemsview(comptime A: type) type {
             return b;
         }
         pub fn mode(b: Self, v: ListSelMode) Self {
-            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn invoked(b: Self, v: bool) Self {
@@ -3958,7 +3987,7 @@ pub fn Itemsview(comptime A: type) type {
 }
 
 pub fn itemsview(ui: anytype) Itemsview(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_ITEMSVIEW) };
+    return .{ .el = ui.el(c.XTK_CTRL_ITEMSVIEW, &c.flux_ctrl_itemsview) };
 }
 
 pub fn Flip(comptime A: type) type {
@@ -3986,7 +4015,7 @@ pub fn Flip(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4014,7 +4043,7 @@ pub fn Flip(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onSelect(b: Self, f: *const fn (i32) A.Msg) Self {
@@ -4029,7 +4058,7 @@ pub fn Flip(comptime A: type) type {
 }
 
 pub fn flip(ui: anytype) Flip(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_FLIP) };
+    return .{ .el = ui.el(c.XTK_CTRL_FLIP, &c.flux_ctrl_flip) };
 }
 
 pub fn Pips(comptime A: type) type {
@@ -4057,7 +4086,7 @@ pub fn Pips(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4089,7 +4118,7 @@ pub fn Pips(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn maxvisible(b: Self, v: i32) Self {
@@ -4097,7 +4126,7 @@ pub fn Pips(comptime A: type) type {
             return b;
         }
         pub fn nav(b: Self, v: PipsNavVis) Self {
-            b.el.prop(c.XTK_PROP_NAV_VISIBILITY, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_NAV_VISIBILITY, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onSelect(b: Self, f: *const fn (i32) A.Msg) Self {
@@ -4112,7 +4141,7 @@ pub fn Pips(comptime A: type) type {
 }
 
 pub fn pips(ui: anytype) Pips(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_PIPS) };
+    return .{ .el = ui.el(c.XTK_CTRL_PIPS, &c.flux_ctrl_pips) };
 }
 
 pub fn Suggest(comptime A: type) type {
@@ -4140,7 +4169,7 @@ pub fn Suggest(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4195,7 +4224,7 @@ pub fn Suggest(comptime A: type) type {
 }
 
 pub fn suggest(ui: anytype) Suggest(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SUGGEST) };
+    return .{ .el = ui.el(c.XTK_CTRL_SUGGEST, &c.flux_ctrl_suggest) };
 }
 
 pub fn Togglesplit(comptime A: type) type {
@@ -4223,7 +4252,7 @@ pub fn Togglesplit(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4270,7 +4299,7 @@ pub fn Togglesplit(comptime A: type) type {
 }
 
 pub fn togglesplit(ui: anytype) Togglesplit(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TOGGLESPLIT) };
+    return .{ .el = ui.el(c.XTK_CTRL_TOGGLESPLIT, &c.flux_ctrl_togglesplit) };
 }
 
 pub fn Radiogroup(comptime A: type) type {
@@ -4298,7 +4327,7 @@ pub fn Radiogroup(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4349,7 +4378,7 @@ pub fn Radiogroup(comptime A: type) type {
 }
 
 pub fn radiogroup(ui: anytype) Radiogroup(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_RADIOGROUP) };
+    return .{ .el = ui.el(c.XTK_CTRL_RADIOGROUP, &c.flux_ctrl_radiogroup) };
 }
 
 pub fn Rating(comptime A: type) type {
@@ -4381,7 +4410,7 @@ pub fn Rating(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4440,7 +4469,7 @@ pub fn Rating(comptime A: type) type {
 }
 
 pub fn rating(ui: anytype) Rating(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_RATING) };
+    return .{ .el = ui.el(c.XTK_CTRL_RATING, &c.flux_ctrl_rating) };
 }
 
 pub fn Selector(comptime A: type) type {
@@ -4468,7 +4497,7 @@ pub fn Selector(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4515,7 +4544,7 @@ pub fn Selector(comptime A: type) type {
 }
 
 pub fn selector(ui: anytype) Selector(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SELECTOR) };
+    return .{ .el = ui.el(c.XTK_CTRL_SELECTOR, &c.flux_ctrl_selector) };
 }
 
 pub fn Selectoritem(comptime A: type) type {
@@ -4543,7 +4572,7 @@ pub fn Selectoritem(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4594,7 +4623,7 @@ pub fn Selectoritem(comptime A: type) type {
 }
 
 pub fn selectoritem(ui: anytype) Selectoritem(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SELECTORITEM) };
+    return .{ .el = ui.el(c.XTK_CTRL_SELECTORITEM, &c.flux_ctrl_selectoritem) };
 }
 
 pub fn Breadcrumb(comptime A: type) type {
@@ -4622,7 +4651,7 @@ pub fn Breadcrumb(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4669,7 +4698,7 @@ pub fn Breadcrumb(comptime A: type) type {
 }
 
 pub fn breadcrumb(ui: anytype) Breadcrumb(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_BREADCRUMB) };
+    return .{ .el = ui.el(c.XTK_CTRL_BREADCRUMB, &c.flux_ctrl_breadcrumb) };
 }
 
 pub fn Crumb(comptime A: type) type {
@@ -4697,7 +4726,7 @@ pub fn Crumb(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4748,7 +4777,7 @@ pub fn Crumb(comptime A: type) type {
 }
 
 pub fn crumb(ui: anytype) Crumb(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_CRUMB) };
+    return .{ .el = ui.el(c.XTK_CTRL_CRUMB, &c.flux_ctrl_crumb) };
 }
 
 pub fn Teachtip(comptime A: type) type {
@@ -4780,7 +4809,7 @@ pub fn Teachtip(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4828,7 +4857,7 @@ pub fn Teachtip(comptime A: type) type {
             return b;
         }
         pub fn placement(b: Self, v: TeachingTipPlacement) Self {
-            b.el.prop(c.XTK_PROP_PLACEMENT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_PLACEMENT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn untargeted(b: Self, v: bool) Self {
@@ -4840,7 +4869,7 @@ pub fn Teachtip(comptime A: type) type {
             return b;
         }
         pub fn tail(b: Self, v: TeachingTipTail) Self {
-            b.el.prop(c.XTK_PROP_TAIL_VISIBILITY, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_TAIL_VISIBILITY, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn placementmargin(b: Self, v: f32) Self {
@@ -4863,7 +4892,7 @@ pub fn Teachtip(comptime A: type) type {
 }
 
 pub fn teachtip(ui: anytype) Teachtip(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TEACHTIP) };
+    return .{ .el = ui.el(c.XTK_CTRL_TEACHTIP, &c.flux_ctrl_teachtip) };
 }
 
 pub fn Tree(comptime A: type) type {
@@ -4891,7 +4920,7 @@ pub fn Tree(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -4946,7 +4975,7 @@ pub fn Tree(comptime A: type) type {
 }
 
 pub fn tree(ui: anytype) Tree(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TREE) };
+    return .{ .el = ui.el(c.XTK_CTRL_TREE, &c.flux_ctrl_tree) };
 }
 
 pub fn Treeitem(comptime A: type) type {
@@ -4974,7 +5003,7 @@ pub fn Treeitem(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5029,7 +5058,7 @@ pub fn Treeitem(comptime A: type) type {
 }
 
 pub fn treeitem(ui: anytype) Treeitem(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TREEITEM) };
+    return .{ .el = ui.el(c.XTK_CTRL_TREEITEM, &c.flux_ctrl_treeitem) };
 }
 
 pub fn Refresh(comptime A: type) type {
@@ -5057,7 +5086,7 @@ pub fn Refresh(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5081,7 +5110,7 @@ pub fn Refresh(comptime A: type) type {
             return b;
         }
         pub fn direction(b: Self, v: PullDirection) Self {
-            b.el.prop(c.XTK_PROP_PULL_DIRECTION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_PULL_DIRECTION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn visualizer(b: Self, v: f32) Self {
@@ -5104,7 +5133,7 @@ pub fn Refresh(comptime A: type) type {
 }
 
 pub fn refresh(ui: anytype) Refresh(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_REFRESH) };
+    return .{ .el = ui.el(c.XTK_CTRL_REFRESH, &c.flux_ctrl_refresh) };
 }
 
 pub fn Avatar(comptime A: type) type {
@@ -5136,7 +5165,7 @@ pub fn Avatar(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5187,7 +5216,7 @@ pub fn Avatar(comptime A: type) type {
 }
 
 pub fn avatar(ui: anytype) Avatar(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_AVATAR) };
+    return .{ .el = ui.el(c.XTK_CTRL_AVATAR, &c.flux_ctrl_avatar) };
 }
 
 pub fn Pager(comptime A: type) type {
@@ -5219,7 +5248,7 @@ pub fn Pager(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5251,23 +5280,23 @@ pub fn Pager(comptime A: type) type {
             return b;
         }
         pub fn display(b: Self, v: PagerDisplayMode) Self {
-            b.el.prop(c.XTK_PROP_DISPLAY_MODE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_DISPLAY_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn first(b: Self, v: PagerButtonVis) Self {
-            b.el.prop(c.XTK_PROP_FIRST_BUTTON, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_FIRST_BUTTON, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn prev(b: Self, v: PagerButtonVis) Self {
-            b.el.prop(c.XTK_PROP_PREVIOUS_BUTTON, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_PREVIOUS_BUTTON, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn next(b: Self, v: PagerButtonVis) Self {
-            b.el.prop(c.XTK_PROP_NEXT_BUTTON, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_NEXT_BUTTON, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn last(b: Self, v: PagerButtonVis) Self {
-            b.el.prop(c.XTK_PROP_LAST_BUTTON, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_LAST_BUTTON, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn prefix(b: Self, v: []const u8) Self {
@@ -5290,7 +5319,7 @@ pub fn Pager(comptime A: type) type {
 }
 
 pub fn pager(ui: anytype) Pager(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_PAGER) };
+    return .{ .el = ui.el(c.XTK_CTRL_PAGER, &c.flux_ctrl_pager) };
 }
 
 pub fn Splitview(comptime A: type) type {
@@ -5322,7 +5351,7 @@ pub fn Splitview(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5346,7 +5375,7 @@ pub fn Splitview(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn gap(b: Self, v: f32) Self {
@@ -5378,11 +5407,11 @@ pub fn Splitview(comptime A: type) type {
             return b;
         }
         pub fn display(b: Self, v: SplitViewDisplayMode) Self {
-            b.el.prop(c.XTK_PROP_DISPLAY_MODE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_DISPLAY_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn placement(b: Self, v: SplitViewPanePlacement) Self {
-            b.el.prop(c.XTK_PROP_PANE_PLACEMENT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_PANE_PLACEMENT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn openlen(b: Self, v: f32) Self {
@@ -5397,7 +5426,7 @@ pub fn Splitview(comptime A: type) type {
 }
 
 pub fn splitview(ui: anytype) Splitview(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SPLITVIEW) };
+    return .{ .el = ui.el(c.XTK_CTRL_SPLITVIEW, &c.flux_ctrl_splitview) };
 }
 
 pub fn Splitpane(comptime A: type) type {
@@ -5429,7 +5458,7 @@ pub fn Splitpane(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5453,15 +5482,15 @@ pub fn Splitpane(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn items(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn justify(b: Self, v: FlexJustify) Self {
-            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn gap(b: Self, v: f32) Self {
@@ -5497,14 +5526,14 @@ pub fn Splitpane(comptime A: type) type {
             return b;
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
-            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
     };
 }
 
 pub fn splitpane(ui: anytype) Splitpane(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SPLITPANE) };
+    return .{ .el = ui.el(c.XTK_CTRL_SPLITPANE, &c.flux_ctrl_splitpane) };
 }
 
 pub fn Splitbody(comptime A: type) type {
@@ -5536,7 +5565,7 @@ pub fn Splitbody(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5560,15 +5589,15 @@ pub fn Splitbody(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn items(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_ITEMS, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn justify(b: Self, v: FlexJustify) Self {
-            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_JUSTIFY_CONTENT, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn gap(b: Self, v: f32) Self {
@@ -5604,14 +5633,14 @@ pub fn Splitbody(comptime A: type) type {
             return b;
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
-            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
     };
 }
 
 pub fn splitbody(ui: anytype) Splitbody(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SPLITBODY) };
+    return .{ .el = ui.el(c.XTK_CTRL_SPLITBODY, &c.flux_ctrl_splitbody) };
 }
 
 pub fn Titlebar(comptime A: type) type {
@@ -5643,7 +5672,7 @@ pub fn Titlebar(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5706,7 +5735,7 @@ pub fn Titlebar(comptime A: type) type {
 }
 
 pub fn titlebar(ui: anytype) Titlebar(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TITLEBAR) };
+    return .{ .el = ui.el(c.XTK_CTRL_TITLEBAR, &c.flux_ctrl_titlebar) };
 }
 
 pub fn Scrollbar(comptime A: type) type {
@@ -5734,7 +5763,7 @@ pub fn Scrollbar(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5762,7 +5791,7 @@ pub fn Scrollbar(comptime A: type) type {
             return b;
         }
         pub fn dir(b: Self, v: StackDirection) Self {
-            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ORIENTATION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn min(b: Self, v: f64) Self {
@@ -5790,7 +5819,7 @@ pub fn Scrollbar(comptime A: type) type {
             return b;
         }
         pub fn indicator(b: Self, v: ScrollBarIndicator) Self {
-            b.el.prop(c.XTK_PROP_INDICATOR_MODE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_INDICATOR_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onChange(b: Self, f: *const fn (f64) A.Msg) Self {
@@ -5801,7 +5830,7 @@ pub fn Scrollbar(comptime A: type) type {
 }
 
 pub fn scrollbar(ui: anytype) Scrollbar(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_SCROLLBAR) };
+    return .{ .el = ui.el(c.XTK_CTRL_SCROLLBAR, &c.flux_ctrl_scrollbar) };
 }
 
 pub fn Looping(comptime A: type) type {
@@ -5829,7 +5858,7 @@ pub fn Looping(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5888,7 +5917,7 @@ pub fn Looping(comptime A: type) type {
 }
 
 pub fn looping(ui: anytype) Looping(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_LOOPING) };
+    return .{ .el = ui.el(c.XTK_CTRL_LOOPING, &c.flux_ctrl_looping) };
 }
 
 pub fn Datepicker(comptime A: type) type {
@@ -5916,7 +5945,7 @@ pub fn Datepicker(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -5967,7 +5996,7 @@ pub fn Datepicker(comptime A: type) type {
 }
 
 pub fn datepicker(ui: anytype) Datepicker(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_DATEPICKER) };
+    return .{ .el = ui.el(c.XTK_CTRL_DATEPICKER, &c.flux_ctrl_datepicker) };
 }
 
 pub fn Timepicker(comptime A: type) type {
@@ -5995,7 +6024,7 @@ pub fn Timepicker(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -6031,7 +6060,7 @@ pub fn Timepicker(comptime A: type) type {
             return b;
         }
         pub fn clock(b: Self, v: Clock) Self {
-            b.el.prop(c.XTK_PROP_CLOCK, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_CLOCK, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn step(b: Self, v: i32) Self {
@@ -6046,7 +6075,7 @@ pub fn Timepicker(comptime A: type) type {
 }
 
 pub fn timepicker(ui: anytype) Timepicker(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_TIMEPICKER) };
+    return .{ .el = ui.el(c.XTK_CTRL_TIMEPICKER, &c.flux_ctrl_timepicker) };
 }
 
 pub fn Calendar(comptime A: type) type {
@@ -6074,7 +6103,7 @@ pub fn Calendar(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -6106,7 +6135,7 @@ pub fn Calendar(comptime A: type) type {
             return b;
         }
         pub fn mode(b: Self, v: CalendarMode) Self {
-            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_SELECTION_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn mindate(b: Self, v: i32) Self {
@@ -6129,7 +6158,7 @@ pub fn Calendar(comptime A: type) type {
 }
 
 pub fn calendar(ui: anytype) Calendar(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_CALENDAR) };
+    return .{ .el = ui.el(c.XTK_CTRL_CALENDAR, &c.flux_ctrl_calendar) };
 }
 
 pub fn Colorpicker(comptime A: type) type {
@@ -6157,7 +6186,7 @@ pub fn Colorpicker(comptime A: type) type {
             return b;
         }
         pub fn self(b: Self, v: FlexAlign) Self {
-            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn ml(b: Self, v: f32) Self {
@@ -6197,7 +6226,7 @@ pub fn Colorpicker(comptime A: type) type {
             return b;
         }
         pub fn spectrum(b: Self, v: Spectrum) Self {
-            b.el.prop(c.XTK_PROP_SPECTRUM, .{ .enumeration = @intCast(@intFromEnum(v)) });
+            b.el.prop(c.XTK_PROP_SPECTRUM, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onValue(b: Self, f: *const fn (i32) A.Msg) Self {
@@ -6208,5 +6237,463 @@ pub fn Colorpicker(comptime A: type) type {
 }
 
 pub fn colorpicker(ui: anytype) Colorpicker(@TypeOf(ui.*).App) {
-    return .{ .el = ui.el(c.XTK_CTRL_COLORPICKER) };
+    return .{ .el = ui.el(c.XTK_CTRL_COLORPICKER, &c.flux_ctrl_colorpicker) };
+}
+
+pub fn Colheader(comptime A: type) type {
+    return struct {
+        el: rt.El(A),
+        const Self = @This();
+        pub fn key(b: Self, k: u64) Self {
+            b.el.key(k);
+            return b;
+        }
+        pub fn child(b: Self, kid: anytype) Self {
+            b.el.child(rt.toEl(A, kid));
+            return b;
+        }
+        pub fn w(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_WIDTH, .{ .f32 = v });
+            return b;
+        }
+        pub fn h(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_HEIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn grow(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_GROW, .{ .f32 = v });
+            return b;
+        }
+        pub fn shrink(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_SHRINK, .{ .f32 = v });
+            return b;
+        }
+        pub fn self(b: Self, v: FlexAlign) Self {
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn ml(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_LEFT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mt(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_TOP, .{ .f32 = v });
+            return b;
+        }
+        pub fn mr(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_RIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mb(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_BOTTOM, .{ .f32 = v });
+            return b;
+        }
+        pub fn tip(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_TOOLTIP, .{ .str = v });
+            return b;
+        }
+    };
+}
+
+pub fn colheader(ui: anytype) Colheader(@TypeOf(ui.*).App) {
+    return .{ .el = ui.el(c.XTK_CTRL_COLHEADER, &c.flux_ctrl_colheader) };
+}
+
+pub fn Colitem(comptime A: type) type {
+    return struct {
+        el: rt.El(A),
+        const Self = @This();
+        pub fn key(b: Self, k: u64) Self {
+            b.el.key(k);
+            return b;
+        }
+        pub fn child(b: Self, kid: anytype) Self {
+            b.el.child(rt.toEl(A, kid));
+            return b;
+        }
+        pub fn w(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_WIDTH, .{ .f32 = v });
+            return b;
+        }
+        pub fn minw(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MIN_WIDTH, .{ .f32 = v });
+            return b;
+        }
+        pub fn maxw(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MAX_WIDTH, .{ .f32 = v });
+            return b;
+        }
+        pub fn text(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn tip(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_TOOLTIP, .{ .str = v });
+            return b;
+        }
+        pub fn @"align"(b: Self, v: TextAlign) Self {
+            b.el.prop(c.XTK_PROP_TEXT_ALIGN, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn enabled(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_ENABLED, .{ .bool = v });
+            return b;
+        }
+        pub fn resizable(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_RESIZABLE, .{ .bool = v });
+            return b;
+        }
+        pub fn sort(b: Self, v: SortDirection) Self {
+            b.el.prop(c.XTK_PROP_SORT_DIRECTION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn onInvoke(b: Self, msg: A.Msg) Self {
+            b.el.on(c.XTK_EVENT_INVOKE, .{ .value = msg });
+            return b;
+        }
+        pub fn onResize(b: Self, f: *const fn (f32) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_RESIZE, .{ .f32 = f });
+            return b;
+        }
+        pub fn onFit(b: Self, msg: A.Msg) Self {
+            b.el.on(c.XTK_EVENT_FIT, .{ .value = msg });
+            return b;
+        }
+        pub fn onReorder(b: Self, f: *const fn (i32) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_REORDER, .{ .i32 = f });
+            return b;
+        }
+    };
+}
+
+pub fn colitem(ui: anytype) Colitem(@TypeOf(ui.*).App) {
+    return .{ .el = ui.el(c.XTK_CTRL_COLITEM, &c.flux_ctrl_colitem) };
+}
+
+pub fn Commandbar(comptime A: type) type {
+    return struct {
+        el: rt.El(A),
+        const Self = @This();
+        pub fn key(b: Self, k: u64) Self {
+            b.el.key(k);
+            return b;
+        }
+        pub fn child(b: Self, kid: anytype) Self {
+            b.el.child(rt.toEl(A, kid));
+            return b;
+        }
+        pub fn w(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_WIDTH, .{ .f32 = v });
+            return b;
+        }
+        pub fn h(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_HEIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn grow(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_GROW, .{ .f32 = v });
+            return b;
+        }
+        pub fn self(b: Self, v: FlexAlign) Self {
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn ml(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_LEFT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mt(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_TOP, .{ .f32 = v });
+            return b;
+        }
+        pub fn mr(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_RIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mb(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_BOTTOM, .{ .f32 = v });
+            return b;
+        }
+        pub fn tip(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_TOOLTIP, .{ .str = v });
+            return b;
+        }
+        pub fn enabled(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_ENABLED, .{ .bool = v });
+            return b;
+        }
+        pub fn open(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_OPEN, .{ .bool = v });
+            return b;
+        }
+        pub fn sticky(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_IS_STICKY, .{ .bool = v });
+            return b;
+        }
+        pub fn mode(b: Self, v: AppBarMode) Self {
+            b.el.prop(c.XTK_PROP_CLOSED_DISPLAY_MODE, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn labels(b: Self, v: LabelPosition) Self {
+            b.el.prop(c.XTK_PROP_DEFAULT_LABEL_POSITION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn more(b: Self, v: OverflowButton) Self {
+            b.el.prop(c.XTK_PROP_OVERFLOW_BUTTON_VISIBILITY, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn dynamic(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_DYNAMIC_OVERFLOW, .{ .bool = v });
+            return b;
+        }
+        pub fn onOpen(b: Self, f: *const fn (bool) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_OPEN, .{ .bool = f });
+            return b;
+        }
+    };
+}
+
+pub fn commandbar(ui: anytype) Commandbar(@TypeOf(ui.*).App) {
+    return .{ .el = ui.el(c.XTK_CTRL_COMMANDBAR, &c.flux_ctrl_commandbar) };
+}
+
+pub fn Appbarbutton(comptime A: type) type {
+    return struct {
+        el: rt.El(A),
+        const Self = @This();
+        pub fn key(b: Self, k: u64) Self {
+            b.el.key(k);
+            return b;
+        }
+        pub fn child(b: Self, kid: anytype) Self {
+            b.el.child(rt.toEl(A, kid));
+            return b;
+        }
+        pub fn w(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_WIDTH, .{ .f32 = v });
+            return b;
+        }
+        pub fn h(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_HEIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn grow(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_GROW, .{ .f32 = v });
+            return b;
+        }
+        pub fn self(b: Self, v: FlexAlign) Self {
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn ml(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_LEFT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mt(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_TOP, .{ .f32 = v });
+            return b;
+        }
+        pub fn mr(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_RIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mb(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_BOTTOM, .{ .f32 = v });
+            return b;
+        }
+        pub fn tip(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_TOOLTIP, .{ .str = v });
+            return b;
+        }
+        pub fn text(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn icon(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_ICON, .{ .str = v });
+            return b;
+        }
+        pub fn enabled(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_ENABLED, .{ .bool = v });
+            return b;
+        }
+        pub fn labelpos(b: Self, v: ElementLabel) Self {
+            b.el.prop(c.XTK_PROP_LABEL_POSITION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn accel(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_ACCELERATOR_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn secondary(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_SECONDARY, .{ .bool = v });
+            return b;
+        }
+        pub fn order(b: Self, v: i32) Self {
+            b.el.prop(c.XTK_PROP_DYNAMIC_OVERFLOW_ORDER, .{ .i32 = v });
+            return b;
+        }
+        pub fn onInvoke(b: Self, msg: A.Msg) Self {
+            b.el.on(c.XTK_EVENT_INVOKE, .{ .value = msg });
+            return b;
+        }
+    };
+}
+
+pub fn appbarbutton(ui: anytype) Appbarbutton(@TypeOf(ui.*).App) {
+    return .{ .el = ui.el(c.XTK_CTRL_APPBARBUTTON, &c.flux_ctrl_appbarbutton) };
+}
+
+pub fn Appbartoggle(comptime A: type) type {
+    return struct {
+        el: rt.El(A),
+        const Self = @This();
+        pub fn key(b: Self, k: u64) Self {
+            b.el.key(k);
+            return b;
+        }
+        pub fn child(b: Self, kid: anytype) Self {
+            b.el.child(rt.toEl(A, kid));
+            return b;
+        }
+        pub fn w(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_WIDTH, .{ .f32 = v });
+            return b;
+        }
+        pub fn h(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_HEIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn grow(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_GROW, .{ .f32 = v });
+            return b;
+        }
+        pub fn self(b: Self, v: FlexAlign) Self {
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn ml(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_LEFT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mt(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_TOP, .{ .f32 = v });
+            return b;
+        }
+        pub fn mr(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_RIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mb(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_BOTTOM, .{ .f32 = v });
+            return b;
+        }
+        pub fn tip(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_TOOLTIP, .{ .str = v });
+            return b;
+        }
+        pub fn text(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn icon(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_ICON, .{ .str = v });
+            return b;
+        }
+        pub fn enabled(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_ENABLED, .{ .bool = v });
+            return b;
+        }
+        pub fn labelpos(b: Self, v: ElementLabel) Self {
+            b.el.prop(c.XTK_PROP_LABEL_POSITION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn accel(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_ACCELERATOR_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn checked(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_CHECKED, .{ .bool = v });
+            return b;
+        }
+        pub fn secondary(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_SECONDARY, .{ .bool = v });
+            return b;
+        }
+        pub fn order(b: Self, v: i32) Self {
+            b.el.prop(c.XTK_PROP_DYNAMIC_OVERFLOW_ORDER, .{ .i32 = v });
+            return b;
+        }
+        pub fn onChange(b: Self, f: *const fn (bool) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_CHANGE_BOOL, .{ .bool = f });
+            return b;
+        }
+    };
+}
+
+pub fn appbartoggle(ui: anytype) Appbartoggle(@TypeOf(ui.*).App) {
+    return .{ .el = ui.el(c.XTK_CTRL_APPBARTOGGLE, &c.flux_ctrl_appbartoggle) };
+}
+
+pub fn Appbarsep(comptime A: type) type {
+    return struct {
+        el: rt.El(A),
+        const Self = @This();
+        pub fn key(b: Self, k: u64) Self {
+            b.el.key(k);
+            return b;
+        }
+        pub fn child(b: Self, kid: anytype) Self {
+            b.el.child(rt.toEl(A, kid));
+            return b;
+        }
+        pub fn w(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_WIDTH, .{ .f32 = v });
+            return b;
+        }
+        pub fn h(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_HEIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn grow(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_GROW, .{ .f32 = v });
+            return b;
+        }
+        pub fn self(b: Self, v: FlexAlign) Self {
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn ml(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_LEFT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mt(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_TOP, .{ .f32 = v });
+            return b;
+        }
+        pub fn mr(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_RIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mb(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_BOTTOM, .{ .f32 = v });
+            return b;
+        }
+        pub fn tip(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_TOOLTIP, .{ .str = v });
+            return b;
+        }
+        pub fn secondary(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_SECONDARY, .{ .bool = v });
+            return b;
+        }
+        pub fn order(b: Self, v: i32) Self {
+            b.el.prop(c.XTK_PROP_DYNAMIC_OVERFLOW_ORDER, .{ .i32 = v });
+            return b;
+        }
+    };
+}
+
+pub fn appbarsep(ui: anytype) Appbarsep(@TypeOf(ui.*).App) {
+    return .{ .el = ui.el(c.XTK_CTRL_APPBARSEP, &c.flux_ctrl_appbarsep) };
 }

@@ -173,7 +173,8 @@ pub fn Ui(comptime A: type) type {
 
         const Self = @This();
 
-        pub fn el(self: *Self, ty: c_int) El(A) {
+        pub fn el(self: *Self, ty: c_int, module: *const c.FluxControlModule) El(A) {
+            c.flux_controls_use(module);
             self.els.append(self.arena, .{ .ty = @intCast(ty) }) catch @panic("out of memory");
             return .{ .ui = self, .id = self.els.items.len - 1 };
         }
@@ -373,7 +374,7 @@ fn Runtime(comptime A: type) type {
                 const span: usize = @intCast(@max(last - first + 1, 1));
                 var i = first;
                 while (i <= last) : (i += 1) {
-                    const row = r.ui.el(c.XTK_CTRL_LISTITEM);
+                    const row = r.ui.el(c.XTK_CTRL_LISTITEM, &c.flux_ctrl_listitem);
                     row.key(@as(usize, @intCast(i)) % span);
                     row.child(it.item(r.ui, @intCast(i)));
                     r.ui.data(id).kids.append(r.ui.arena, row.id) catch @panic("out of memory");
@@ -606,7 +607,7 @@ fn Runtime(comptime A: type) type {
             cfg.title = title.ptr;
             cfg.width = window.width;
             cfg.height = window.height;
-            cfg.theme = @intCast(@intFromEnum(window.theme));
+            cfg.theme = @intCast(@backingInt(window.theme));
             cfg.backdrop = c.FLUX_BACKDROP_MICA;
             const flux = c.flux_app_create(&cfg) orelse return 1;
             const host = c.flux_app_attachhost(flux) orelse {

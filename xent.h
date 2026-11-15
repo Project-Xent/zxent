@@ -3,3 +3,4 @@
 #include <fluxent/flux_app.h>
 #include <fluxent/flux_host.h>
 #include <fluxent/flux_theme.h>
+#include <fluxent/flux_controls.h>
