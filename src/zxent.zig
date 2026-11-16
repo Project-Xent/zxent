@@ -222,6 +222,7 @@ pub const TextTrim = enum(c_int) {
     char_ellipsis = c.XTK_TRIM_CHAR_ELLIPSIS,
     word = c.XTK_TRIM_WORD,
     word_ellipsis = c.XTK_TRIM_WORD_ELLIPSIS,
+    path_ellipsis = c.XTK_TRIM_PATH_ELLIPSIS,
 };
 
 pub const TickPlacement = enum(c_int) {
