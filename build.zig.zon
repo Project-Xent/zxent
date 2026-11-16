@@ -1,6 +1,6 @@
 .{
     .name = .zxent,
-    .version = "0.3.2",
+    .version = "0.3.3",
     .minimum_zig_version = "0.17.1",
     .fingerprint = 0x39c17dc7f42cab05,
     .dependencies = .{
