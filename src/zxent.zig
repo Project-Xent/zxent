@@ -64,6 +64,13 @@ pub const Clock = enum(c_int) {
     h24 = c.XTK_CLOCK_24H,
 };
 
+pub const DropOperation = enum(c_int) {
+    none = c.XTK_DROP_NONE,
+    copy = c.XTK_DROP_COPY,
+    move = c.XTK_DROP_MOVE,
+    link = c.XTK_DROP_LINK,
+};
+
 pub const ElementLabel = enum(c_int) {
     default = c.XTK_ELEMENT_LABEL_DEFAULT,
     collapsed = c.XTK_ELEMENT_LABEL_COLLAPSED,
@@ -331,6 +338,34 @@ pub fn Container(comptime A: type) type {
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
             b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn drop(b: Self, v: DropOperation) Self {
+            b.el.prop(c.XTK_PROP_DROP_OPERATION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn dragtext(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn dragfiles(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
+            return b;
+        }
+        pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_HOVER, .{ .bool = f });
+            return b;
+        }
+        pub fn onDropfiles(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_FILES, .{ .str = f });
+            return b;
+        }
+        pub fn onDroptext(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_TEXT, .{ .str = f });
+            return b;
+        }
+        pub fn onDragcompleted(b: Self, f: *const fn (i32) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_COMPLETED, .{ .i32 = f });
             return b;
         }
     };
@@ -1533,6 +1568,34 @@ pub fn Card(comptime A: type) type {
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
             b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn drop(b: Self, v: DropOperation) Self {
+            b.el.prop(c.XTK_PROP_DROP_OPERATION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn dragtext(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn dragfiles(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
+            return b;
+        }
+        pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_HOVER, .{ .bool = f });
+            return b;
+        }
+        pub fn onDropfiles(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_FILES, .{ .str = f });
+            return b;
+        }
+        pub fn onDroptext(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_TEXT, .{ .str = f });
+            return b;
+        }
+        pub fn onDragcompleted(b: Self, f: *const fn (i32) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_COMPLETED, .{ .i32 = f });
             return b;
         }
     };
@@ -2794,6 +2857,34 @@ pub fn Expbody(comptime A: type) type {
             b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
+        pub fn drop(b: Self, v: DropOperation) Self {
+            b.el.prop(c.XTK_PROP_DROP_OPERATION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn dragtext(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn dragfiles(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
+            return b;
+        }
+        pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_HOVER, .{ .bool = f });
+            return b;
+        }
+        pub fn onDropfiles(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_FILES, .{ .str = f });
+            return b;
+        }
+        pub fn onDroptext(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_TEXT, .{ .str = f });
+            return b;
+        }
+        pub fn onDragcompleted(b: Self, f: *const fn (i32) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_COMPLETED, .{ .i32 = f });
+            return b;
+        }
     };
 }
 
@@ -3065,6 +3156,34 @@ pub fn Dialogbody(comptime A: type) type {
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
             b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn drop(b: Self, v: DropOperation) Self {
+            b.el.prop(c.XTK_PROP_DROP_OPERATION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn dragtext(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn dragfiles(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
+            return b;
+        }
+        pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_HOVER, .{ .bool = f });
+            return b;
+        }
+        pub fn onDropfiles(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_FILES, .{ .str = f });
+            return b;
+        }
+        pub fn onDroptext(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_TEXT, .{ .str = f });
+            return b;
+        }
+        pub fn onDragcompleted(b: Self, f: *const fn (i32) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_COMPLETED, .{ .i32 = f });
             return b;
         }
     };
@@ -5530,6 +5649,34 @@ pub fn Splitpane(comptime A: type) type {
             b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
+        pub fn drop(b: Self, v: DropOperation) Self {
+            b.el.prop(c.XTK_PROP_DROP_OPERATION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn dragtext(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn dragfiles(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
+            return b;
+        }
+        pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_HOVER, .{ .bool = f });
+            return b;
+        }
+        pub fn onDropfiles(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_FILES, .{ .str = f });
+            return b;
+        }
+        pub fn onDroptext(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_TEXT, .{ .str = f });
+            return b;
+        }
+        pub fn onDragcompleted(b: Self, f: *const fn (i32) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_COMPLETED, .{ .i32 = f });
+            return b;
+        }
     };
 }
 
@@ -5635,6 +5782,34 @@ pub fn Splitbody(comptime A: type) type {
         }
         pub fn wrap(b: Self, v: FlexWrap) Self {
             b.el.prop(c.XTK_PROP_WRAP, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn drop(b: Self, v: DropOperation) Self {
+            b.el.prop(c.XTK_PROP_DROP_OPERATION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn dragtext(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_TEXT, .{ .str = v });
+            return b;
+        }
+        pub fn dragfiles(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
+            return b;
+        }
+        pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_HOVER, .{ .bool = f });
+            return b;
+        }
+        pub fn onDropfiles(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_FILES, .{ .str = f });
+            return b;
+        }
+        pub fn onDroptext(b: Self, f: *const fn ([]const u8) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DROP_TEXT, .{ .str = f });
+            return b;
+        }
+        pub fn onDragcompleted(b: Self, f: *const fn (i32) A.Msg) Self {
+            b.el.on(c.XTK_EVENT_DRAG_COMPLETED, .{ .i32 = f });
             return b;
         }
     };
