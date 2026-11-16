@@ -77,6 +77,7 @@ pub const ElementLabel = enum(c_int) {
 };
 
 pub const FontWeight = enum(c_int) {
+    inherit = c.XTK_FONT_INHERIT,
     thin = c.XTK_FONT_THIN,
     extra_light = c.XTK_FONT_EXTRA_LIGHT,
     light = c.XTK_FONT_LIGHT,
@@ -1210,6 +1211,30 @@ pub fn Image(comptime A: type) type {
             b.el.prop(c.XTK_PROP_IMAGE_STRETCH, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
+        pub fn nl(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_NINE_GRID_LEFT, .{ .f32 = v });
+            return b;
+        }
+        pub fn nt(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_NINE_GRID_TOP, .{ .f32 = v });
+            return b;
+        }
+        pub fn nr(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_NINE_GRID_RIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn nb(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_NINE_GRID_BOTTOM, .{ .f32 = v });
+            return b;
+        }
+        pub fn onOpened(b: Self, msg: A.Msg) Self {
+            b.el.on(c.XTK_EVENT_IMAGE_OPENED, .{ .value = msg });
+            return b;
+        }
+        pub fn onFailed(b: Self, msg: A.Msg) Self {
+            b.el.on(c.XTK_EVENT_IMAGE_FAILED, .{ .value = msg });
+            return b;
+        }
     };
 }
 
@@ -1390,6 +1415,10 @@ pub fn List(comptime A: type) type {
         }
         pub fn first(b: Self, v: i32) Self {
             b.el.prop(c.XTK_PROP_REALIZED_FIRST, .{ .i32 = v });
+            return b;
+        }
+        pub fn rectsel(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_RECTANGLE_SELECTION, .{ .bool = v });
             return b;
         }
         pub fn onSelect(b: Self, f: *const fn (i32) A.Msg) Self {
@@ -3798,6 +3827,10 @@ pub fn Listbox(comptime A: type) type {
             b.el.prop(c.XTK_PROP_REALIZED_FIRST, .{ .i32 = v });
             return b;
         }
+        pub fn rectsel(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_RECTANGLE_SELECTION, .{ .bool = v });
+            return b;
+        }
         pub fn onSelect(b: Self, f: *const fn (i32) A.Msg) Self {
             b.el.on(c.XTK_EVENT_SELECT, .{ .i32 = f });
             return b;
@@ -3897,6 +3930,10 @@ pub fn Gridview(comptime A: type) type {
             b.el.prop(c.XTK_PROP_REALIZED_FIRST, .{ .i32 = v });
             return b;
         }
+        pub fn rectsel(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_RECTANGLE_SELECTION, .{ .bool = v });
+            return b;
+        }
         pub fn onSelect(b: Self, f: *const fn (i32) A.Msg) Self {
             b.el.on(c.XTK_EVENT_SELECT, .{ .i32 = f });
             return b;
@@ -3994,6 +4031,10 @@ pub fn Repeater(comptime A: type) type {
         }
         pub fn first(b: Self, v: i32) Self {
             b.el.prop(c.XTK_PROP_REALIZED_FIRST, .{ .i32 = v });
+            return b;
+        }
+        pub fn rectsel(b: Self, v: bool) Self {
+            b.el.prop(c.XTK_PROP_RECTANGLE_SELECTION, .{ .bool = v });
             return b;
         }
         pub fn items(b: Self, count: usize, f: rt.ItemFn(A)) Self {
@@ -6872,4 +6913,63 @@ pub fn Appbarsep(comptime A: type) type {
 
 pub fn appbarsep(ui: anytype) Appbarsep(@TypeOf(ui.*).App) {
     return .{ .el = ui.el(c.XTK_CTRL_APPBARSEP, &c.flux_ctrl_appbarsep) };
+}
+
+pub fn Groupheader(comptime A: type) type {
+    return struct {
+        el: rt.El(A),
+        const Self = @This();
+        pub fn key(b: Self, k: u64) Self {
+            b.el.key(k);
+            return b;
+        }
+        pub fn child(b: Self, kid: anytype) Self {
+            b.el.child(rt.toEl(A, kid));
+            return b;
+        }
+        pub fn w(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_WIDTH, .{ .f32 = v });
+            return b;
+        }
+        pub fn h(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_HEIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn grow(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_GROW, .{ .f32 = v });
+            return b;
+        }
+        pub fn shrink(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_SHRINK, .{ .f32 = v });
+            return b;
+        }
+        pub fn self(b: Self, v: FlexAlign) Self {
+            b.el.prop(c.XTK_PROP_ALIGN_SELF, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
+        pub fn ml(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_LEFT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mt(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_TOP, .{ .f32 = v });
+            return b;
+        }
+        pub fn mr(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_RIGHT, .{ .f32 = v });
+            return b;
+        }
+        pub fn mb(b: Self, v: f32) Self {
+            b.el.prop(c.XTK_PROP_MARGIN_BOTTOM, .{ .f32 = v });
+            return b;
+        }
+        pub fn tip(b: Self, v: []const u8) Self {
+            b.el.prop(c.XTK_PROP_TOOLTIP, .{ .str = v });
+            return b;
+        }
+    };
+}
+
+pub fn groupheader(ui: anytype) Groupheader(@TypeOf(ui.*).App) {
+    return .{ .el = ui.el(c.XTK_CTRL_GROUPHEADER, &c.flux_ctrl_groupheader) };
 }
