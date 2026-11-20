@@ -10,6 +10,12 @@ pub const Theme = rt.Theme;
 pub const Window = rt.Window;
 pub const run = rt.run;
 
+pub const Direction = enum(c_int) {
+    inherit = c.XENT_DIRECTION_INHERIT,
+    ltr = c.XENT_DIRECTION_LTR,
+    rtl = c.XENT_DIRECTION_RTL,
+};
+
 pub const FlexAlign = enum(c_int) {
     auto = c.XENT_FLEX_ALIGN_AUTO,
     start = c.XENT_FLEX_ALIGN_START,
@@ -114,6 +120,14 @@ pub const ListSelMode = enum(c_int) {
     none = c.XTK_LIST_SELECT_NONE,
     multiple = c.XTK_LIST_SELECT_MULTIPLE,
     extended = c.XTK_LIST_SELECT_EXTENDED,
+};
+
+pub const NavKind = enum(c_int) {
+    item = c.XTK_NAV_ITEM,
+    header = c.XTK_NAV_HEADER,
+    separator = c.XTK_NAV_SEPARATOR,
+    footer = c.XTK_NAV_FOOTER,
+    child = c.XTK_NAV_CHILD,
 };
 
 pub const OverflowButton = enum(c_int) {
@@ -351,6 +365,10 @@ pub fn Container(comptime A: type) type {
         }
         pub fn dragfiles(b: Self, v: []const u8) Self {
             b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
+            return b;
+        }
+        pub fn flow(b: Self, v: Direction) Self {
+            b.el.prop(c.XTK_PROP_FLOW_DIRECTION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
@@ -1609,6 +1627,10 @@ pub fn Card(comptime A: type) type {
         }
         pub fn dragfiles(b: Self, v: []const u8) Self {
             b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
+            return b;
+        }
+        pub fn flow(b: Self, v: Direction) Self {
+            b.el.prop(c.XTK_PROP_FLOW_DIRECTION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
@@ -2898,6 +2920,10 @@ pub fn Expbody(comptime A: type) type {
             b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
             return b;
         }
+        pub fn flow(b: Self, v: Direction) Self {
+            b.el.prop(c.XTK_PROP_FLOW_DIRECTION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
         pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
             b.el.on(c.XTK_EVENT_DRAG_HOVER, .{ .bool = f });
             return b;
@@ -3197,6 +3223,10 @@ pub fn Dialogbody(comptime A: type) type {
         }
         pub fn dragfiles(b: Self, v: []const u8) Self {
             b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
+            return b;
+        }
+        pub fn flow(b: Self, v: Direction) Self {
+            b.el.prop(c.XTK_PROP_FLOW_DIRECTION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
@@ -5702,6 +5732,10 @@ pub fn Splitpane(comptime A: type) type {
             b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
             return b;
         }
+        pub fn flow(b: Self, v: Direction) Self {
+            b.el.prop(c.XTK_PROP_FLOW_DIRECTION, .{ .enumeration = @intCast(@backingInt(v)) });
+            return b;
+        }
         pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
             b.el.on(c.XTK_EVENT_DRAG_HOVER, .{ .bool = f });
             return b;
@@ -5835,6 +5869,10 @@ pub fn Splitbody(comptime A: type) type {
         }
         pub fn dragfiles(b: Self, v: []const u8) Self {
             b.el.prop(c.XTK_PROP_DRAG_FILES, .{ .str = v });
+            return b;
+        }
+        pub fn flow(b: Self, v: Direction) Self {
+            b.el.prop(c.XTK_PROP_FLOW_DIRECTION, .{ .enumeration = @intCast(@backingInt(v)) });
             return b;
         }
         pub fn onDraghover(b: Self, f: *const fn (bool) A.Msg) Self {
